@@ -1,0 +1,24 @@
+﻿
+@using WebApplicationApisIshango.Models.CRUD
+@inject ClassMvtCompte comptemvtDAL
+
+<div class="container" id="balanceModal">
+    <div class="row">
+        <p class="balance">Sodle = @solde.Solde</p>
+    </div>
+</div>
+
+@code {
+
+    ClassMvtCompte.tSolde solde = new ClassMvtCompte.tSolde();
+
+    public string balance;
+
+        protected override void OnInitialized()
+        {
+            solde = comptemvtDAL.GetSolde("410000012");
+        }
+           
+    }
+
+}
