@@ -1,12 +1,45 @@
-﻿
+﻿@using WebApplicationApisIshango.Models.CRUD
+@inject ClassMvtCompte compteDAL
 
+<EditForm Model="Journal" OnValidSubmit="HandleValidateDates" >
+    <div class="row">
+        <h2 style="margin-left:15px;">Sélectionner un intervale entre deux dates:</h2>
+        <div class="col-lg-3">
+            <label>Date début</label>
+            <div class="input-daterange">
+                <input type="date" required @bind-value="dateSimple.dateDebut" class="form-control" placeholder="Date debut" />
+                <ValidationMessage For="@(() => dateSimple.dateDebut)" />
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <label>Date fin</label>
+            <div class="row">
+                <div class="input-daterange col-lg-4">
+                    <input type="date" required @bind-value="dateSimple.dateFin" class="form-control" placeholder="Date fin" />
+                    <ValidationMessage For="@(() => dateSimple.dateFin)" />
+
+                    <p></p>
+                </div>
+                    
+                <div class="input-daterange col-lg-4">
+                    <button class="btn btn-primary btn-block" type="submit">Valider</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="input-group">
+
+            </div>
+        </div>
+        <br />
+    </div>
+</EditForm>
 
 
 <table class="table table-responsive table-striped table-bordered">
     <caption>
-        <h3>MES RELEVES</h3>
+        <h3></h3>
     </caption>
-
     <thead>
         <tr>
             <th>ID</th>
@@ -17,45 +50,51 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>1</td>
-            <td>Transfert au compte 4100000012</td>
-            <td>2020-06-27</td>
-            <td>200.0</td>
-            <td>0.0</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Transfert au compte 4100000012</td>
-            <td>2020-06-27</td>
-            <td>200.0</td>
-            <td>0.0</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Transfert au compte 4100000012</td>
-            <td>2020-06-27</td>
-            <td>200.0</td>
-            <td>0.0</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Transfert au compte 4100000012</td>
-            <td>2020-06-27</td>
-            <td>200.0</td>
-            <td>0.0</td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>Transfert au compte 4100000012</td>
-            <td>2020-06-27</td>
-            <td>200.0</td>
-            <td>0.0</td>
-        </tr>
+        
+        @foreach (var item in listeReleve)
+        {
+
+            <tr>
+                <td>@item.NumOperation</td>
+                <td>@item.Libelle</td>
+                <td>@item.DateOp.ToShortDateString()</td>
+                <td>@item.Entree</td>
+                <td>@item.Sortie</td>
+            </tr>
+        }
     </tbody>
 </table>
 
 
 @code {
 
+    public string dateDebut, dateFin;
+
+    ClassMvtCompte.tJournalCompte Journal = new ClassMvtCompte.tJournalCompte();
+
+    IEnumerable<ClassMvtCompte.tJournalCompte> listeReleve;
+
+
+
+    public class DateSimple
+    {
+        public DateTime dateDebut { get; set; }
+        public DateTime dateFin { get; set; }
+        //jjjjjjj
+    };
+
+    private EditContext _editContext;
+    private DateSimple dateSimple = new DateSimple();
+
+        protected override void OnInitialized()
+    {
+        _editContext = new EditContext(dateSimple);
+        listeReleve = compteDAL.GetReleveDuCompte(DateTime.UtcNow.ToShortTimeString(), DateTime.UtcNow.ToShortDateString(), "413000001");
+    }
+
+    void HandleValidateDates() {
+
+        listeReleve = compteDAL.GetReleveDuCompte(DateTime.UtcNow.ToShortTimeString(), DateTime.UtcNow.ToShortDateString(), "413000001");
+        Console.WriteLine(Journal);
+    }
 }

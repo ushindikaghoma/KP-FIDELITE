@@ -4,21 +4,21 @@
 
 <div class="container" id="balanceModal">
     <div class="row">
-        <p class="balance">Sodle = @solde.Solde</p>
+        <p class="balance">Solde = @solde $</p>
     </div>
 </div>
 
 @code {
 
-    ClassMvtCompte.tSolde solde = new ClassMvtCompte.tSolde();
+    //ClassMvtCompte.tSolde solde = new ClassMvtCompte.tSolde();
 
-    public string balance;
+        public string solde;
 
         protected override void OnInitialized()
         {
-            solde = comptemvtDAL.GetSolde("410000012");
+            solde = comptemvtDAL.GetSolde1("413000001");
         }
-           
+
     }
 
-}
+

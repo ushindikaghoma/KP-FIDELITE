@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data.SqlClient;
 using System.Data;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace WebApplicationApisIshango.Models.CRUD
 {
@@ -29,7 +30,7 @@ namespace WebApplicationApisIshango.Models.CRUD
             public double Solde { get; set; }
         }
 
-        public partial class tJournalCompte
+        public  class tJournalCompte
         {
             public int NumOperation { get; set; }
             public DateTime DateOp { get; set; }
@@ -40,6 +41,8 @@ namespace WebApplicationApisIshango.Models.CRUD
             public double Entree { get; set; }
             public double Sortie { get; set; }
             public int Reference { get; set; }
+            public DateTime dateDebut { get; set; }
+            public DateTime dateFin { get; set; }
         }
 
         public partial class tSolde
@@ -322,7 +325,7 @@ namespace WebApplicationApisIshango.Models.CRUD
                 }
         }
 
-        public List<tJournalCompte> GetReleveDuCompte(string date_debut, string date_fin, string num_compte)
+        public IEnumerable<tJournalCompte> GetReleveDuCompte(string date_debut, string date_fin, string num_compte)
         {
             using (SqlConnection Conn = new SqlConnection(ClassVaribleGolbal.seteconnexion))
 
@@ -408,6 +411,59 @@ namespace WebApplicationApisIshango.Models.CRUD
                     }
 
                     return _list;
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    if (Conn != null)
+                    {
+                        if (Conn.State == ConnectionState.Open)
+                        {
+                            Conn.Close();
+                            Conn.Dispose();
+                        }
+                    }
+                }
+        }
+
+
+
+
+        public string GetSolde1(string NumCompte)
+        {
+
+            Double bl;
+            string blstring="00";
+            using (SqlConnection Conn = new SqlConnection(ClassVaribleGolbal.seteconnexion))
+
+                try
+                {
+                    Conn.Open();
+                    tSolde _list = new tSolde();
+
+                    if (Conn.State != System.Data.ConnectionState.Open)
+                        Conn.Open();
+
+                    string s = "select (SUM(Entree)-SUM(Sortie)) AS Solde from tMvtCompte where NumCompte = @a";
+                    SqlCommand objCommand = new SqlCommand(s, Conn);
+                    objCommand.Parameters.AddWithValue("@a", NumCompte);
+                    SqlDataReader _Reader = objCommand.ExecuteReader();
+
+                    while (_Reader.Read())
+                    {
+                       // tSolde objCust = new tSolde();
+
+                       // objCust.Solde = Convert.ToDouble(_Reader["Solde"]);
+                        bl= Convert.ToDouble(_Reader["Solde"]);
+                        // _list.Add(objCust);
+                        blstring = bl.ToString();
+
+                    }
+
+                    return blstring;
                 }
                 catch
                 {
