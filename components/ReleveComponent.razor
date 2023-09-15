@@ -87,14 +87,15 @@
     private DateSimple dateSimple = new DateSimple();
 
         protected override void OnInitialized()
-    {
-        _editContext = new EditContext(dateSimple);
-        listeReleve = compteDAL.GetReleveDuCompte(DateTime.UtcNow.ToShortTimeString(), DateTime.UtcNow.ToShortDateString(), "413000001");
-    }
+        {
+            _editContext = new EditContext(dateSimple);
+            listeReleve = compteDAL.GetReleveDuCompte(DateTime.UtcNow.ToShortTimeString(), DateTime.UtcNow.ToShortDateString(), "413000001");
+        }
 
     void HandleValidateDates() {
 
         listeReleve = compteDAL.GetReleveDuCompte(DateTime.UtcNow.ToShortTimeString(), DateTime.UtcNow.ToShortDateString(), "413000001");
         Console.WriteLine(Journal);
+        
     }
 }
